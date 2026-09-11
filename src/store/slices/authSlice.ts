@@ -1,18 +1,16 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-  //Это «хранилище» статуса авторизации
-
 
 interface AuthState {
-  user: { id: string; email: string; name: string } | null; //кто вошел
-  token: string | null; // какой токен у него
-  isAuthenticated: boolean; // вошел ли вообще
+  user: { id: string; email: string; name: string } | null; 
+  token: string | null; 
+  isAuthenticated: boolean; 
 }
 
 const initialState: AuthState = {
   user: null,
   token: localStorage.getItem('token'),
-  isAuthenticated: !!localStorage.getItem('token'),  // получает значение по ключу 'key'
+  isAuthenticated: !!localStorage.getItem('token'),  
 };
 
 export const authSlice = createSlice({

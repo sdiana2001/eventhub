@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './LoginPage.module.scss'; 
-import { useAppDispatch } from '../../store/hook'; // Проверь название файла (hook или hooks)
+import { useAppDispatch } from '../../store/hook'; 
 import { setCredentials } from '../../store/slices/authSlice';
+import { $api } from '../../api/axios';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,33 +13,25 @@ export const LoginPage: React.FC = () => {
   const dispatch = useAppDispatch();
 
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch('https://...', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Неверный логин или пароль');
-      }
 
-      const data = await response.json();
+    try {
+      const response = await $api.post('/auth/login', { email, password });
 
       dispatch(
         setCredentials({
-          user: data.user,
-          token: data.token,
+          user: response.data.user,
+          token: response.data.token,
         })
       );
 
       navigate('/');
     } catch (error) {
       console.error('Ошибка входа:', error);
-      alert('Не удалось войти!');
+      alert('Неверный логин или пароль');
     }
   };
 
@@ -48,10 +41,7 @@ export const LoginPage: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.card}>
         <h1 className={styles.title}>Вход</h1>
-        <p className={styles.subtitle}>
-          Войдите в свой аккаунт, чтобы управлять мероприятиями и покупать билеты
-        </p>
-
+        <p className={styles.subtitle}>Войдите в свой аккаунт, чтобы управлять мероприятиями и покупать билеты</p>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.inputGroup}>
             <label htmlFor="email">Электронная почта</label>
@@ -78,8 +68,7 @@ export const LoginPage: React.FC = () => {
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+                required />
             </div>
           </div>
 
@@ -156,11 +145,9 @@ export const LoginPage: React.FC = () => {
             Войти
           </button>
         </form>
-
         <div className={styles.divider}>
           <span>Нет аккаунта?</span>
         </div>
-
         <Link to="/register" className={styles.registerLink}>
           Зарегистрироваться
         </Link>

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from '../LoginPage/LoginPage.module.scss'; 
+import { useAppDispatch } from '../../store/hook';
+import { setCredentials } from '../../store/slices/authSlice';
+import { registerApi } from '../../api/auth';
 
 export const RegisterPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -8,11 +11,26 @@ export const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Register attempt:', { name, email, password });
+try{
+  const data = await registerApi({ name, email, password });
+
+  dispatch(
+    setCredentials({
+      user:data.user,
+      token: data.token,
+    })
+  );
     navigate('/login');
+}catch(error){
+  alert('Не удалось зарегистрироваться');
+  console.log(error);
+}
+
+
   };
 
   return (
