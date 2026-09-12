@@ -1,0 +1,128 @@
+.header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.leftNav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  text-decoration: none;
+
+  span {
+    color: #2563eb;
+  }
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.navLink {
+  text-decoration: none;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  padding-bottom: 4px;
+
+  &:hover {
+    color: #111827;
+  }
+
+  &.active {
+    color: #2563eb;
+    border-bottom: 2px solid #2563eb;
+  }
+}
+
+.rightNav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.searchIconBtn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.authButtons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loginBtn {
+  text-decoration: none;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
+}
+
+.registerBtn {
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #2563eb;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: #1d4ed8;
+  }
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.logoutBtn {
+  background: none;
+  border: 1px solid #d1d5db;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
+}
