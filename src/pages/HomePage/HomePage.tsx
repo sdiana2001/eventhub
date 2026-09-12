@@ -4,26 +4,35 @@ import { Header } from '../../components/Header/Header';
 import { EventCard } from '../../components/EventCard/EventCard';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { setSearchQuery, setSelectedCategory, setSelectedSort } from '../../store/slices/eventsSlice';
+import React, { useEffect, useState } from 'react';
+import { useDebounce } from '../../hooks/useDebounce';
+import type { IEvent } from '../../types/event';
 
 
 
 export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { events, searchQuery, selectedCategory, selectedSort} = useAppSelector((state)=> state.events);
+  const [searchTerm, setSearchTerm] = useState(searchQuery);
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 400);
 
-const filteredEvents = events
-  .filter((event) => {
+useEffect(()=> {
+    dispatch(setSearchQuery(debouncedSearchTerm))
+}, [debouncedSearchTerm, dispatch])
+
+    const filteredEvents = events
+  .filter((event: IEvent) => {
     const matchesSearch = event.title
       .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+      .includes(debouncedSearchTerm.toLowerCase());
     const matchesCategory =
       selectedCategory === 'Все категории' ||
       event.category === selectedCategory;
 
     return matchesSearch && matchesCategory;
   })
-  .sort((a, b) => {
+  .sort((a: IEvent, b: IEvent) => {
     // 1. Сначала дешевые
     if (selectedSort === 'Сначала дешевые') {
       const priceA = typeof a.price === 'number' ? a.price : 0;
@@ -67,8 +76,8 @@ const filteredEvents = events
               <input
                 type="text"
                 placeholder="Поиск мероприятий по названию..."
-                value={searchQuery}
-                onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles.searchInput}
               />
             </div>
