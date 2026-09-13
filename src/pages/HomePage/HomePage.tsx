@@ -3,23 +3,30 @@ import styles from './HomePage.module.scss';
 import { Header } from '../../components/Header/Header';
 import { EventCard } from '../../components/EventCard/EventCard';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
-import { setSearchQuery, setSelectedCategory, setSelectedSort } from '../../store/slices/eventsSlice';
+import { fetchEvents, setSearchQuery, setSelectedCategory, setSelectedSort } from '../../store/slices/eventsSlice';
 import React, { useEffect, useState } from 'react';
 import { useDebounce } from '../../hooks/useDebounce';
 import type { IEvent } from '../../types/event';
+import { EventGridSkeleton } from '../../components/EventGridSkeleton/EventGridSkeleton';
 
 
 
 export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { events, searchQuery, selectedCategory, selectedSort} = useAppSelector((state)=> state.events);
+  const { events, isLoading, searchQuery, selectedCategory, selectedSort} = useAppSelector((state)=> state.events);
   const [searchTerm, setSearchTerm] = useState(searchQuery);
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 400);
+const debouncedSearchTerm = useDebounce(searchTerm, 400);
+useEffect(() => {
+  dispatch(fetchEvents());
+}, [dispatch]);
+
 
 useEffect(()=> {
     dispatch(setSearchQuery(debouncedSearchTerm))
-}, [debouncedSearchTerm, dispatch])
+}, [debouncedSearchTerm, dispatch]);
+
+
 
     const filteredEvents = events
   .filter((event: IEvent) => {
@@ -68,8 +75,6 @@ useEffect(()=> {
             <h1 className={styles.title}>Афиша мероприятий</h1>
             <p className={styles.subtitle}>Открывайте интересные события рядом с вами</p>
           </div>
-
-          {/* Панель фильтров */}
           <div className={styles.filters}>
             <div className={styles.searchWrapper}>
               <span className={styles.searchIcon}>🔍</span>
@@ -103,8 +108,6 @@ useEffect(()=> {
               <option value="Сначала дорогие">Сначала дорогие</option>
             </select>
           </div>
-
-          {/* Заголовок секции */}
           <div className={styles.sectionHeader}>
             <h2>Ближайшие мероприятия</h2>
             <button className={styles.showAllBtn}>Показать все</button>
@@ -112,9 +115,13 @@ useEffect(()=> {
 
           {/* Сетка с карточками */}
           <div className={styles.grid}>
-            {filteredEvents.map((event) => (
+            {isLoading ? (
+              <EventGridSkeleton count={8} />
+            ):(
+             filteredEvents.map((event) => (
               <EventCard key={event.id} event={event} />
-            ))}
+            ))
+            )}
           </div>
         </div>
       </main>

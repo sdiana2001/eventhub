@@ -7,18 +7,21 @@ interface EventCardProps {
 }
 
 export const EventCard: React.FC<EventCardProps> = ({ event }) => {
-  const formatPrice = (price: number | 'Бесплатно') => {
-    if (typeof price === 'number') {
-      return price === 0 ? 'Бесплатно' : `${price.toLocaleString('ru-RU')} ₽`;
-    }
-    return price;
+  const formatPrice = (price: number) => {
+    return price === 0 ? 'Бесплатно' : `от ${price.toLocaleString('ru-RU')} ₽`;
   };
+
+  const categoryName = typeof event.category === 'object' ? event.category.name : event.category;
 
   return (
     <div className={styles.card}>
       <div className={styles.imageWrapper}>
-        <img src={event.imageUrl} alt={event.title} className={styles.image} />
-        <span className={styles.categoryBadge}>{event.category}</span>
+        <img 
+          src={event.coverUrl} 
+          alt={event.title} 
+          className={styles.image} 
+        />
+        <span className={styles.categoryBadge}>{categoryName}</span>
       </div>
 
       <div className={styles.content}>
@@ -29,13 +32,13 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
             <span>📅</span> {event.date}
           </div>
           <div className={styles.infoItem}>
-            <span>📍</span> {event.location}
+            <span>📍</span> {event.address}
           </div>
           <div className={styles.infoItem}>
             <span>💰</span> {formatPrice(event.price)}
           </div>
           <div className={styles.infoItem}>
-            <span>👤</span> Осталось {event.seatsLeft} мест
+            <span>👤</span> Осталось {event.capacity} мест
           </div>
         </div>
 

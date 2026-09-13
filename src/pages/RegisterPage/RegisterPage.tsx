@@ -24,7 +24,7 @@ try{
       token: data.token,
     })
   );
-    navigate('/login');
+    navigate('/');
 }catch(error){
   alert('Не удалось зарегистрироваться');
   console.log(error);

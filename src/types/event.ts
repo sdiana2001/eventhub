@@ -1,10 +1,16 @@
+export interface ICategory {
+  id: number;
+  name: string;
+}
+
 export interface IEvent {
-  id: string;
+  id: number | string;
   title: string;
-  category: string;
+  description?: string;
   date: string;
-  location: string;
-  price: number | 'Бесплатно';
-  seatsLeft: number;
-  imageUrl: string;
+  address: string;
+  price: number;
+  capacity: number;
+  coverUrl: string;
+  category: ICategory | string;
 }
