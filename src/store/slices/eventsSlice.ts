@@ -29,7 +29,7 @@ interface EventState {
 }
 
 const initialState: EventState = {
-  // events: MOCK_EVENTS,
+  // events: MOCK_EVENTS, 
   events: [],
   isLoading: false,
   error: null,
@@ -57,17 +57,14 @@ export const eventsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // 1. Старт запроса -> включаем скелетоны
       .addCase(fetchEvents.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      // 2. Успех -> выключаем скелетоны, сохраняем данные
       .addCase(fetchEvents.fulfilled, (state, action) => {
         state.isLoading = false;
         state.events = action.payload;
       })
-      // 3. Ошибка -> выключаем скелетоны, показываем ошибку
       .addCase(fetchEvents.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
