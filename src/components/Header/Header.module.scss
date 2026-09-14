@@ -48,11 +48,12 @@
   &:hover {
     color: #111827;
   }
+}
 
-  &.active {
-    color: #2563eb;
-    border-bottom: 2px solid #2563eb;
-  }
+.active {
+  color: #2563eb !important;
+  border-bottom: 2px solid #2563eb;
+  font-weight: 600;
 }
 
 .rightNav {

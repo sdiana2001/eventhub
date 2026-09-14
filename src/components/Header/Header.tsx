@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { logout } from '../../store/slices/authSlice';
@@ -21,14 +21,19 @@ export const Header: React.FC = () => {
           <Link to="/" className={styles.logo}>
             Event<span>Hub</span>
           </Link>
-          <nav className={styles.nav}>
-            <Link to="/" className={`${styles.navLink} ${styles.active}`}>
+       <nav className={styles.nav}>
+        <NavLink 
+          to="/" 
+          end 
+         className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
               Мероприятия
-            </Link>
+            </NavLink>
             {token && (
-              <Link to="/my-events" className={styles.navLink}>
+              <NavLink to="/my-events" className={({ isActive }) => 
+        isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+      }>
                 Мои мероприятия
-              </Link>
+              </NavLink>
             )}
           </nav>
         </div>

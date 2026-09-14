@@ -19,8 +19,10 @@ export const fetchEvents = createAsyncThunk(
   },
 );
 
-interface EventState {
+interface IEventState {
   events: IEvent[];
+  myCreatedEvents: IEvent[];
+  myJoinedEvents: IEvent[];
   isLoading: boolean;
   error: string | null;
   searchQuery: string;
@@ -28,9 +30,11 @@ interface EventState {
   selectedSort: string;
 }
 
-const initialState: EventState = {
-  // events: MOCK_EVENTS, 
+const initialState: IEventState = {
+  // events: MOCK_EVENTS,
   events: [],
+  myCreatedEvents: [],
+  myJoinedEvents: [],
   isLoading: false,
   error: null,
   searchQuery: '',
