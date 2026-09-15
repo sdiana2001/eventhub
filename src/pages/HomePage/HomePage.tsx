@@ -112,8 +112,6 @@ useEffect(()=> {
             <h2>Ближайшие мероприятия</h2>
             <button className={styles.showAllBtn}>Показать все</button>
           </div>
-
-          {/* Сетка с карточками */}
           <div className={styles.grid}>
             {isLoading ? (
               <EventGridSkeleton count={8} />

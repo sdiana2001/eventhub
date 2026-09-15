@@ -10,7 +10,6 @@ export const fetchEvents = createAsyncThunk(
       const response = await axios.get<IEvent[]>('http://localhost:3000/events');
       return response.data;
     } catch (error: unknown) {
-      // ← Заменили any на unknown (или можно просто catch (error))
       if (axios.isAxiosError(error)) {
         return rejectWithValue(error.response?.data?.message || 'Не удалось загрузить мероприятия');
       }

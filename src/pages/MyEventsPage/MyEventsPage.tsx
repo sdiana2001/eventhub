@@ -7,16 +7,13 @@ import { useAppSelector } from '../../store/hook';
 type TabType = 'created' | 'joined';
 
 export const MyEventsPage: React.FC = () => {
-  // 1. Создаем "переключатель" табов (по умолчанию активна вкладка 'created')
+  
 const [activeTab, setActiveTab] = useState<TabType>('created');
-
-  // 2. Достаем данные из Redux (пока массивы пустые, пока Аскат делает бэк)
+ 
 const myCreatedEvents = useAppSelector((state) => state.events.myCreatedEvents) || [];
 const myJoinedEvents = useAppSelector((state) => state.events.myJoinedEvents) || [];
 const isLoading = useAppSelector((state) => state.events.isLoading);
-
-  // 3. Выбираем, какой список покажем: если activeTab === 'created', то созданные, иначе — записанные
-  const currentEvents = activeTab === 'created' ? myCreatedEvents : myJoinedEvents;
+const currentEvents = activeTab === 'created' ? myCreatedEvents : myJoinedEvents;
 
   return (
     <div className={styles.page}>
@@ -24,8 +21,7 @@ const isLoading = useAppSelector((state) => state.events.isLoading);
       <main className={styles.main}>
         <div className={styles.container}>
           <h1 className={styles.title}>Мои мероприятия</h1>
-
-          {/* Кнопки переключения вкладок */}
+         
           <div className={styles.tabs}>
             <button
               className={`${styles.tab} ${activeTab === 'created' ? styles.active : ''}`}
@@ -44,10 +40,8 @@ const isLoading = useAppSelector((state) => state.events.isLoading);
          
           <div className={styles.content}>
             {isLoading ? (
-              // Показываем скелетоны во время загрузки
               <EventGridSkeleton count={4} />
             ) : currentEvents.length === 0 ? (
-              // Показываем текст-заглушку, если список пустой
               <div className={styles.emptyState}>
                 <p>
                   {activeTab === 'created'
@@ -56,7 +50,6 @@ const isLoading = useAppSelector((state) => state.events.isLoading);
                 </p>
               </div>
             ) : (
-              // Отрисовываем сетку с карточками
               <div className={styles.grid}>
                 {currentEvents.map((event) => (
                   <EventCard key={event.id} event={event} />
