@@ -4,6 +4,7 @@ import styles from './LoginPage.module.scss';
 import { useAppDispatch } from '../../store/hook'; 
 import { setCredentials } from '../../store/slices/authSlice';
 import { $api } from '../../api/axios';
+import axios from 'axios';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -11,27 +12,30 @@ export const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [error, setError] = useState('');
 
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('')
 
 
     try {
       const response = await $api.post('/auth/login', { email, password });
 
-      dispatch(
-        setCredentials({
-          user: response.data.user,
-          token: response.data.token,
-        })
-      );
+      dispatch(setCredentials(response.data));
 
       navigate('/');
-    } catch (error) {
-      console.error('Ошибка входа:', error);
-      alert('Неверный логин или пароль');
+    } catch (err) {
+      console.error('Ошибка входа:', err);
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        setError('Неверный логин или пароль');
+      } else if (axios.isAxiosError(err) && !err.response) {
+        setError('Сервер недоступен, попробуйте позже');
+      } else {
+        setError('Не удалось войти, попробуйте ещё раз');
+      }
     }
   };
 
@@ -71,7 +75,6 @@ export const LoginPage: React.FC = () => {
                 required />
             </div>
           </div>
-
           <div className={styles.inputGroup}>
             <label htmlFor="password">Пароль</label>
             <div className={styles.inputWrapper}>
@@ -140,6 +143,7 @@ export const LoginPage: React.FC = () => {
               </button>
             </div>
           </div>
+          {error && <p className={styles.error}>{error}</p>}
 
           <button type="submit" className={styles.submitBtn}>
             Войти

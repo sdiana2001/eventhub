@@ -1,6 +1,6 @@
 .card {
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
@@ -17,7 +17,7 @@
 .imageWrapper {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 234px;
 }
 
 .image {
@@ -28,61 +28,71 @@
 
 .categoryBadge {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
+  bottom: 16px;
+  left: 16px;
   background-color: rgba(255, 255, 255, 0.9);
   color: #2563eb;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 600;
-  padding: 4px 10px;
+  padding: 5px 13px;
   border-radius: 20px;
   backdrop-filter: blur(4px);
 }
 
 .content {
-  padding: 16px;
+  padding: 21px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
 .title {
-  font-size: 16px;
+  font-size: 21px;
   font-weight: 700;
   color: #111827;
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
   line-height: 1.3;
 }
 
 .info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: 8px;
+  margin-bottom: 21px;
   flex-grow: 1;
 }
 
 .infoItem {
-  font-size: 13px;
+  font-size: 17px;
   color: #6b7280;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .button {
   width: 100%;
-  padding: 10px;
+  padding: 13px;
   background-color: #2563eb;
   color: #ffffff;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  box-sizing: border-box;
 
   &:hover {
     background-color: #1d4ed8;
   }
+}
+.icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: #9ca3af;
 }

@@ -1,70 +1,82 @@
-
 import styles from './HomePage.module.scss';
 import { Header } from '../../components/Header/Header';
 import { EventCard } from '../../components/EventCard/EventCard';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
-import { fetchEvents, setSearchQuery, setSelectedCategory, setSelectedSort } from '../../store/slices/eventsSlice';
-import React, { useEffect, useState } from 'react';
+import { fetchEvents, fetchCategories, setSearchQuery, setSelectedCategory, setSelectedSort } from '../../store/slices/eventsSlice';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDebounce } from '../../hooks/useDebounce';
 import type { IEvent } from '../../types/event';
 import { EventGridSkeleton } from '../../components/EventGridSkeleton/EventGridSkeleton';
 
-
-
 export const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { events, isLoading, searchQuery, selectedCategory, selectedSort} = useAppSelector((state)=> state.events);
+  const { events, categories, isLoading, searchQuery, selectedCategory, selectedSort, currentPage, hasMore } =
+    useAppSelector((state) => state.events);
   const [searchTerm, setSearchTerm] = useState(searchQuery);
+  const observerTarget = useRef<HTMLDivElement>(null);
 
-const debouncedSearchTerm = useDebounce(searchTerm, 400);
-useEffect(() => {
-  dispatch(fetchEvents());
-}, [dispatch]);
+  const debouncedSearchTerm = useDebounce(searchTerm, 400);
 
+  useEffect(() => {
+    dispatch(fetchEvents(1));
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
-useEffect(()=> {
-    dispatch(setSearchQuery(debouncedSearchTerm))
-}, [debouncedSearchTerm, dispatch]);
+  useEffect(() => {
+    dispatch(setSearchQuery(debouncedSearchTerm));
+  }, [debouncedSearchTerm, dispatch]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoading) {
+          dispatch(fetchEvents(currentPage + 1));
+        }
+      },
+      { threshold: 1 }
+    );
 
+    const target = observerTarget.current;
+    if (target) observer.observe(target);
 
-    const filteredEvents = events
-  .filter((event: IEvent) => {
-    const matchesSearch = event.title
-      .toLowerCase()
-      .includes(debouncedSearchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === 'Все категории' ||
-      event.category === selectedCategory;
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, [currentPage, hasMore, isLoading, dispatch]);
 
-    return matchesSearch && matchesCategory;
-  })
-  .sort((a: IEvent, b: IEvent) => {
-    // 1. Сначала дешевые
-    if (selectedSort === 'Сначала дешевые') {
-      const priceA = typeof a.price === 'number' ? a.price : 0;
-      const priceB = typeof b.price === 'number' ? b.price : 0;
-      return priceA - priceB;
-    }
+  const filteredEvents = events
+    .filter((event: IEvent) => {
+      const matchesSearch = event.title
+        .toLowerCase()
+        .includes(debouncedSearchTerm.toLowerCase());
+      const matchesCategory =
+        selectedCategory === 'Все категории' ||
+        event.category.name === selectedCategory;
+      const isUpcoming = new Date(event.date).getTime() >= new Date().getTime();
 
-    // 2. Сначала дорогие
-    if (selectedSort === 'Сначала дорогие') {
-      const priceA = typeof a.price === 'number' ? a.price : 0;
-      const priceB = typeof b.price === 'number' ? b.price : 0;
-      return priceB - priceA;
-    }
+      return matchesSearch && matchesCategory && isUpcoming;
+    })
+    .sort((a: IEvent, b: IEvent) => {
+      if (selectedSort === 'Сначала дешевые') {
+        const priceA = Number(a.price);
+        const priceB = Number(b.price);
+        return priceA - priceB;
+      }
 
-    // 3. Сначала ближайшие (по дате)
-    if (selectedSort === 'Сначала ближайшие') {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
-      return dateA - dateB;
-    }
+      if (selectedSort === 'Сначала дорогие') {
+        const priceA = Number(a.price);
+        const priceB = Number(b.price);
+        return priceB - priceA;
+      }
 
-    return 0;
-  });
+      if (selectedSort === 'Сначала ближайшие') {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        return dateA - dateB;
+      }
 
- 
+      return 0;
+    });
 
   return (
     <div className={styles.page}>
@@ -77,7 +89,10 @@ useEffect(()=> {
           </div>
           <div className={styles.filters}>
             <div className={styles.searchWrapper}>
-              <span className={styles.searchIcon}>🔍</span>
+              <svg className={styles.searchIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
               <input
                 type="text"
                 placeholder="Поиск мероприятий по названию..."
@@ -93,10 +108,11 @@ useEffect(()=> {
               className={styles.select}
             >
               <option value="Все категории">Все категории</option>
-              <option value="Концерт">Концерт</option>
-              <option value="Лекция">Лекция</option>
-              <option value="Выставка">Выставка</option>
-              <option value="Спорт">Спорт</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
             </select>
 
             <select
@@ -110,17 +126,19 @@ useEffect(()=> {
           </div>
           <div className={styles.sectionHeader}>
             <h2>Ближайшие мероприятия</h2>
-            <button className={styles.showAllBtn}>Показать все</button>
           </div>
           <div className={styles.grid}>
-            {isLoading ? (
+            {events.length === 0 && isLoading ? (
               <EventGridSkeleton count={8} />
-            ):(
-             filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))
+            ) : (
+              filteredEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))
             )}
           </div>
+          <div ref={observerTarget} className={styles.scrollTrigger} />
+          {isLoading && events.length > 0 && <p className={styles.loadingMore}>Загружаем ещё...</p>}
+          {!hasMore && events.length > 0 && <p className={styles.endMessage}>Это все мероприятия</p>}
         </div>
       </main>
     </div>

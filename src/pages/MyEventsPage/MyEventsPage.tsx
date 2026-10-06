@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './MyEventsPage.module.scss';
 import { Header } from '../../components/Header/Header';
 import { EventCard } from '../../components/EventCard/EventCard';
 import { EventGridSkeleton } from '../../components/EventGridSkeleton/EventGridSkeleton';
-import { useAppSelector } from '../../store/hook';
+import { useAppSelector, useAppDispatch } from '../../store/hook';
+import { fetchMyCreatedEvents, fetchMyJoinedEvents } from '../../store/slices/eventsSlice'
 type TabType = 'created' | 'joined';
 
 export const MyEventsPage: React.FC = () => {
@@ -14,6 +15,11 @@ const myCreatedEvents = useAppSelector((state) => state.events.myCreatedEvents) 
 const myJoinedEvents = useAppSelector((state) => state.events.myJoinedEvents) || [];
 const isLoading = useAppSelector((state) => state.events.isLoading);
 const currentEvents = activeTab === 'created' ? myCreatedEvents : myJoinedEvents;
+const dispatch = useAppDispatch();
+useEffect(() => {
+  dispatch(fetchMyCreatedEvents());
+  dispatch(fetchMyJoinedEvents());
+}, [dispatch]);
 
   return (
     <div className={styles.page}>

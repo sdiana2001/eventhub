@@ -4,32 +4,32 @@
 }
 
 .main {
-  padding: 40px 0;
+  padding: 52px 0;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1560px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 26px;
 }
 
 .title {
-  font-size: 32px;
+  font-size: 42px;
   font-weight: 700;
   color: #0f172a;
-  margin-bottom: 24px;
+  margin-bottom: 31px;
 }
 
 .tabs {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   border-bottom: 2px solid #e2e8f0; 
-  margin-bottom: 32px;
+  margin-bottom: 42px;
 }
 
 .tab {
-  padding: 12px 20px;
-  font-size: 16px;
+  padding: 16px 26px;
+  font-size: 21px;
   font-weight: 500;
   color: #64748b;
   background: none;
@@ -52,13 +52,13 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(338px, 1fr));
+  gap: 31px;
 }
 
 .emptyState {
   text-align: center;
-  padding: 60px 0;
+  padding: 78px 0;
   color: #64748b;
-  font-size: 18px;
+  font-size: 23px;
 }

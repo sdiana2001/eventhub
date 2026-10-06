@@ -1,12 +1,10 @@
 import { $api } from './axios';
 
 interface AuthResponse {
-  token: string; 
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
+  access_token: string; 
+  id: number;
+  email: string;
+  name: string;
 }
 
 export const loginApi = async (data: {

@@ -9,8 +9,19 @@ export interface IEvent {
   description?: string;
   date: string;
   address: string;
+  location: string;
   price: number;
   capacity: number;
+  registrationsCount?: number;
   coverUrl: string;
-  category: ICategory | string;
+  category: ICategory;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  } | null;
+}
+export interface IEventsResponse {
+  items: IEvent[];
+  total: number;
 }

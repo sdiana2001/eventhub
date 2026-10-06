@@ -21,27 +21,26 @@ export const Header: React.FC = () => {
           <Link to="/" className={styles.logo}>
             Event<span>Hub</span>
           </Link>
-       <nav className={styles.nav}>
-        <NavLink 
-          to="/" 
-          end 
-         className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
-              Мероприятия
-            </NavLink>
-            {token && (
-              <NavLink to="/my-events" className={({ isActive }) => 
-        isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-      }>
-                Мои мероприятия
+          <nav className={styles.nav}>
+              <NavLink to="/" end className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
+                    Мероприятия
               </NavLink>
-            )}
+              {token && (
+                <NavLink to="/my-events" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
+                  Мои мероприятия
+                </NavLink>
+              )}
+              {token && (
+                <NavLink to="/events/create" className={({ isActive }) => 
+                  isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+                }>
+                  Создать мероприятие
+                </NavLink>
+              )}
           </nav>
         </div>
 
         <div className={styles.rightNav}>
-          <button className={styles.searchIconBtn} aria-label="Поиск">
-            🔍
-          </button>
 
           {token ? (
             <div className={styles.userInfo}>
